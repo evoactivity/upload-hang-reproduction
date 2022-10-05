@@ -12,7 +12,8 @@ test.group("Service Provider Profile", async (group) => {
   // });
 
   // but this is needed to trigger the hang
-  // --------------------------------------
+  // without this setup the hang does not occur
+  // ------------------------------------------
   group.each.setup(async () => {
     await sleep(1);
     return async () => await sleep(1);
@@ -26,13 +27,13 @@ test.group("Service Provider Profile", async (group) => {
   });
 
   test("upload doesn't hang", async ({ client }) => {
-    const response = await client
+    await client
       .post(`/api/v1/upload`) // route is not real
       .file("avatar", join(__dirname, "file.jpg"));
   });
 
   test("upload hangs", async ({ client }) => {
-    const response = await client
+    await client
       .post(`/api/v1/upload`) // route is not real
       .file("avatar", join(__dirname, "../does/not/exist/", "file.jpg"));
   });
